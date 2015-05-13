@@ -127,7 +127,14 @@ class AlesticEc2AmiCollection(list):
     })
 
   def sort_by(self, key, reverse=False):
-    self.sort(key=lambda x: getattr(x, key), reverse=reverse)
+    self.sort(key=lambda x: getattr(x, key) + x.virtualization_type, reverse=reverse)
+  
+  def latest_version(self, **kwargs):
+    res = set(self) 
+    res = self.find(**kwargs)
+    res_obj = AlesticEc2AmiCollection(res)
+    res_obj.sort_by('version', reverse=True)
+    return res_obj[0].version
 
   def find(self, **kwargs):
     # Start with all amis and intersect the list with filters

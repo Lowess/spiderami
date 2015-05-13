@@ -13,6 +13,6 @@ def main():
 
 if __name__ == '__main__':
   # Initialize coloredlogs.
-  coloredlogs.install(level=logging.DEBUG)  
+  coloredlogs.install(level=logging.DEBUG) 
   # Start the scraper
   main()

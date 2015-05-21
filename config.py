@@ -35,3 +35,9 @@ CSRF_SESSION_KEY = "aagoori#odeeRee9UCh%ee4aiThai)ng/ux7aes3ge9ve3eic4"
 SECRET_KEY = "yeigang9EizeKaecei7cohw_aedeewiwe[chahj4iePh4aem"
 
 JSONIFY_PRETTYPRINT_REGULAR = True
+
+# WEB_RESOURCE = 'alestic'
+WEB_RESOURCE = 'cloudimages'
+
+# Cache timeout in seconds
+CACHE_TIMEOUT = 3600

@@ -9,30 +9,41 @@ import copy
 import logging
 logger = logging.getLogger(__name__)
 
-class AlesticEc2Ami(object):
+class Ec2Ami(object):
   """
     Object representation of alestic Ec2 AMI.
   """
   def __init__(self, id=None, region=None, distribution=None, version=None, 
-    is_lts=False, codename=False, virtualization_type=None, 
-    root_device_type=None):
+    is_lts=None, is_eol=None, is_devel=None, codename=False, virtualization_type=None, 
+    root_device_type=None, architecture=None, release_date=None, aki_id=None):
     self._id = id
     self._region = region
     self._distribution = distribution
     self._version = version
     self._is_lts = is_lts
+    self._is_eol = is_eol
+    self._is_devel = is_devel
     self._codename = codename
     self._virtualization_type = virtualization_type
     self._root_device_type = root_device_type
+    self._architecture = architecture
+    self._release_date = release_date
+    self._aki_id = aki_id
   
   def __repr__(self):
-    return "[%s] %s %s %s %s - %s %s" %(self.id,
+    return "[%s][%s] %s %s%s%s %s %s %s - %s %s %s %s" %(self.region,
+      self.id,
       self.distribution,
       self.version,
       "LTS" if self.is_lts else "",
+      "EOL" if self.is_eol else "",
+      "DEVEL" if self.is_devel else "",
       self.codename,
       self.virtualization_type,
-      self.root_device_type)
+      self.root_device_type,
+      self.release_date,
+      self.architecture,
+      self.aki_id)
     # return self.to_json()
 
   def to_json(self):
@@ -41,9 +52,14 @@ class AlesticEc2Ami(object):
       "distribution": self.distribution,
       "version": self.version,
       "is_lts": self.is_lts,
+      "is_eol": self.is_eol,
+      "is_devel": self.is_devel,
       "codename": self.codename,
       "virtualization_type": self.virtualization_type,
-      "root_device_type": self.root_device_type
+      "root_device_type": self.root_device_type,
+      "architecture": self.architecture,
+      "release_date": self.release_date,
+      "aki_id": self.aki_id
     })
 
   # Getters / Setters
@@ -88,6 +104,22 @@ class AlesticEc2Ami(object):
     self._is_lts = value
 
   @property
+  def is_eol(self):
+    return self._is_eol
+  
+  @is_eol.setter
+  def is_eol(self, value):
+    self._is_eol = value
+
+  @property
+  def is_devel(self):
+    return self._is_devel
+  
+  @is_devel.setter
+  def is_devel(self, value):
+    self._is_devel = value
+
+  @property
   def codename(self):
     return self._codename
   
@@ -111,9 +143,33 @@ class AlesticEc2Ami(object):
   def root_device_type(self, value):
     self._root_device_type = value
 
-class AlesticEc2AmiCollection(list):
+  @property
+  def architecture(self):
+    return self._architecture
+  
+  @architecture.setter
+  def architecture(self, value):
+    self._architecture = value
+
+  @property
+  def release_date(self):
+    return self._release_date
+  
+  @release_date.setter
+  def release_date(self, value):
+    self._release_date = value
+
+  @property
+  def aki_id(self):
+    return self._aki_id
+  
+  @aki_id.setter
+  def aki_id(self, value):
+    self._aki_id = value
+
+class Ec2AmiCollection(list):
   """
-    Smart container class for AlesticEc2Ami.
+    Smart container class for Ec2Ami.
   """
   def __init__(self, value=[]):
     list.__init__(self, value)
@@ -132,7 +188,7 @@ class AlesticEc2AmiCollection(list):
   def latest_version(self, **kwargs):
     res = set(self) 
     res = self.find(**kwargs)
-    res_obj = AlesticEc2AmiCollection(res)
+    res_obj = Ec2AmiCollection(res)
     res_obj.sort_by('version', reverse=True)
     return res_obj[0].version
 
@@ -148,7 +204,7 @@ class AlesticEc2AmiCollection(list):
       except Exception, e: 
         logger.error("Skipping filter filter_by(%s,%s) which can not be found..." % (key, val))        
         logger.error(e)        
-    return AlesticEc2AmiCollection(res)
+    return Ec2AmiCollection(res)
 
   def filter_by(self, arg, value):
     logger.info("Applying filter_by_%s with value: %s" % (arg, value))

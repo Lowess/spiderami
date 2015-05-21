@@ -20,6 +20,15 @@ app.config.from_object('config')
 if "FLASK_ENV" in os.environ:
   app.config.from_object(os.environ["FLASK_ENV"])
 
+
+from app.scraper.alestic_ami_scraper import AlesticAmiScraper
+from app.scraper.cloud_images_scraper import CloudImagesScraper
+
+if app.config['WEB_RESOURCE'] == 'alestic':
+  scraper = AlesticAmiScraper()
+else:
+  scraper = CloudImagesScraper()
+
 ##############################################################################
 ## Flask Blueprints registration
 ##############################################################################
@@ -32,4 +41,4 @@ app.register_blueprint(ami_module)
 
 @app.route('/', methods=['GET'])
 def index():
-  return redirect(url_for('ami.index'))
+  return redirect(url_for('ami.search_ami'))

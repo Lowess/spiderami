@@ -183,7 +183,10 @@ class Ec2AmiCollection(list):
     })
 
   def sort_by(self, key, reverse=False):
-    self.sort(key=lambda x: getattr(x, key) + x.virtualization_type, reverse=reverse)
+    if key == 'version':
+      self.sort(key=lambda x: float(getattr(x, key)), reverse=reverse)
+    else:
+      self.sort(key=lambda x: getattr(x, key) + x.virtualization_type, reverse=reverse)
   
   def latest_version(self, **kwargs):
     res = set(self) 

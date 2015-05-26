@@ -10,7 +10,7 @@ import os
 VERSION = "2.00"
 
 # Set the server name
-#SERVER_NAME = ''
+# SERVER_NAME = ""
 
 # Statement for enabling the development environment
 DEBUG = True
@@ -29,12 +29,10 @@ CSRF_ENABLED = True
 
 # Use a secure, unique and absolutely secret key for
 # signing the data. 
-CSRF_SESSION_KEY = "aagoori#odeeRee9UCh%ee4aiThai)ng/ux7aes3ge9ve3eic4"
+CSRF_SESSION_KEY = "aJ4tie4Theuthahdiethah9oo3ejeeshoot}ee"
 
 # Secret key for signing cookies
 SECRET_KEY = "yeigang9EizeKaecei7cohw_aedeewiwe[chahj4iePh4aem"
-
-JSONIFY_PRETTYPRINT_REGULAR = True
 
 # WEB_RESOURCE = 'alestic'
 WEB_RESOURCE = 'cloudimages'

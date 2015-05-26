@@ -26,6 +26,8 @@ from app.scraper.cloud_images_scraper import CloudImagesScraper
 
 if app.config['WEB_RESOURCE'] == 'alestic':
   scraper = AlesticAmiScraper()
+elif app.config['WEB_RESOURCE'] == 'cloudimages':
+  scraper = CloudImagesScraper()
 else:
   scraper = CloudImagesScraper()
 
@@ -39,6 +41,10 @@ from app.api.ami.controllers import ami as ami_module
 # Register blueprint(s)
 app.register_blueprint(ami_module)
 
+# Error handlers 
+from app.api.errors import *
+
+# Default route 
 @app.route('/', methods=['GET'])
 def index():
   return redirect(url_for('ami.search_ami'))

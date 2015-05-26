@@ -12,21 +12,13 @@ from app.scraper.alestic_ami_scraper import AlesticAmiScraper
 from app.scraper.cloud_images_scraper import CloudImagesScraper
 
 # Api Errors handlers
-from app.api.ami.errors import InvalidApiUsage
+from app.api.errors import InvalidApiUsage
 
 ami = Blueprint('ami', __name__, url_prefix="/ami")
 
 # Logging
 import logging
 logger = logging.getLogger(__name__)
-
-
-@app.errorhandler(InvalidApiUsage)
-def handle_invalid_usage(error):
-  response = jsonify(error.to_dict())
-  response.status_code = error.status_code
-  return response
-
 
 def crawl():
   current_time = int(time.time())
@@ -50,7 +42,6 @@ def pretty_json(endpoint, values):
 
 @ami.route('', methods=['GET', 'POST'])
 def search_ami():
-  # Get updates from Alestic webpage
   ami_collection = crawl()
 
   # Filter results
@@ -79,9 +70,8 @@ def search_ami():
 @ami.route('/latest', methods=['GET', 'POST'])
 @ami.route('/latest-lts', defaults={'is_lts': True}, methods=['GET', 'POST'])
 def latest_ami(is_lts=None):
-# Get updates from Alestic webpage
   ami_collection = crawl()
-
+  
   # Filter results
   filters = dict()
   if request.method == 'POST':

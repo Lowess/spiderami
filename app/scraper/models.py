@@ -3,7 +3,7 @@
 
 # General imports
 import json
-import copy 
+import copy
 
 # Logging
 import logging
@@ -13,8 +13,8 @@ class Ec2Ami(object):
   """
     Object representation of alestic Ec2 AMI.
   """
-  def __init__(self, id=None, region=None, distribution=None, version=None, 
-    is_lts=None, is_eol=None, is_devel=None, codename=False, virtualization_type=None, 
+  def __init__(self, id=None, region=None, distribution=None, version=None,
+    is_lts=None, is_eol=None, is_devel=None, codename=False, virtualization_type=None,
     root_device_type=None, architecture=None, release_date=None, aki_id=None):
     self._id = id
     self._region = region
@@ -29,7 +29,7 @@ class Ec2Ami(object):
     self._architecture = architecture
     self._release_date = release_date
     self._aki_id = aki_id
-  
+
   def __repr__(self):
     return "[%s][%s] %s %s%s%s %s %s %s - %s %s %s %s" %(self.region,
       self.id,
@@ -47,8 +47,8 @@ class Ec2Ami(object):
     # return self.to_json()
 
   def to_json(self):
-    return json.dumps({"id": self.id, 
-      "region": self.region, 
+    return json.dumps({"id": self.id,
+      "region": self.region,
       "distribution": self.distribution,
       "version": self.version,
       "is_lts": self.is_lts,
@@ -81,7 +81,7 @@ class Ec2Ami(object):
 
   @property
   def distribution(self):
-    return self._distribution  
+    return self._distribution
 
   @distribution.setter
   def distribution(self, value):
@@ -90,7 +90,7 @@ class Ec2Ami(object):
   @property
   def version(self):
     return self._version
-  
+
   @version.setter
   def version(self, value):
     self._version = value
@@ -98,7 +98,7 @@ class Ec2Ami(object):
   @property
   def is_lts(self):
     return self._is_lts
-  
+
   @is_lts.setter
   def is_lts(self, value):
     self._is_lts = value
@@ -106,7 +106,7 @@ class Ec2Ami(object):
   @property
   def is_eol(self):
     return self._is_eol
-  
+
   @is_eol.setter
   def is_eol(self, value):
     self._is_eol = value
@@ -114,7 +114,7 @@ class Ec2Ami(object):
   @property
   def is_devel(self):
     return self._is_devel
-  
+
   @is_devel.setter
   def is_devel(self, value):
     self._is_devel = value
@@ -122,7 +122,7 @@ class Ec2Ami(object):
   @property
   def codename(self):
     return self._codename
-  
+
   @codename.setter
   def codename(self, value):
     self._codename = value
@@ -130,7 +130,7 @@ class Ec2Ami(object):
   @property
   def virtualization_type(self):
     return self._virtualization_type
-  
+
   @virtualization_type.setter
   def virtualization_type(self, value):
     self._virtualization_type = value
@@ -138,7 +138,7 @@ class Ec2Ami(object):
   @property
   def root_device_type(self):
     return self._root_device_type
-  
+
   @root_device_type.setter
   def root_device_type(self, value):
     self._root_device_type = value
@@ -146,7 +146,7 @@ class Ec2Ami(object):
   @property
   def architecture(self):
     return self._architecture
-  
+
   @architecture.setter
   def architecture(self, value):
     self._architecture = value
@@ -154,7 +154,7 @@ class Ec2Ami(object):
   @property
   def release_date(self):
     return self._release_date
-  
+
   @release_date.setter
   def release_date(self, value):
     self._release_date = value
@@ -162,7 +162,7 @@ class Ec2Ami(object):
   @property
   def aki_id(self):
     return self._aki_id
-  
+
   @aki_id.setter
   def aki_id(self, value):
     self._aki_id = value
@@ -176,7 +176,7 @@ class Ec2AmiCollection(list):
 
   def __repr__(self):
     return "\n" + "\n".join([elt.__repr__() for elt in self])
-      
+
   def to_json(self):
     return json.dumps({
       "amis": [json.loads(ami.to_json()) for ami in self]
@@ -187,9 +187,9 @@ class Ec2AmiCollection(list):
       self.sort(key=lambda x: float(getattr(x, key)), reverse=reverse)
     else:
       self.sort(key=lambda x: getattr(x, key) + x.virtualization_type, reverse=reverse)
-  
+
   def latest_version(self, **kwargs):
-    res = set(self) 
+    res = set(self)
     res = self.find(**kwargs)
     res_obj = Ec2AmiCollection(res)
     res_obj.sort_by('version', reverse=True)
@@ -204,9 +204,9 @@ class Ec2AmiCollection(list):
           res = res & self.filter_by(key, val)
         else:
           logger.warning("Skipping filter filter_by(%s,%s) because of None value..." % (key, val))
-      except Exception, e: 
-        logger.error("Skipping filter filter_by(%s,%s) which can not be found..." % (key, val))        
-        logger.error(e)        
+      except Exception, e:
+        logger.error("Skipping filter filter_by(%s,%s) which can not be found..." % (key, val))
+        logger.error(e)
     return Ec2AmiCollection(res)
 
   def filter_by(self, arg, value):
